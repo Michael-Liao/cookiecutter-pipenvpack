@@ -13,8 +13,8 @@ if __name__ == '__main__':
         remove_file('travis_pypi_setup.py')
 
     if '{{ cookiecutter.create_author_file }}' != 'y':
-        remove_file('AUTHORS.rst')
-        remove_file('docs/authors.rst')
+        remove_file('AUTHORS.md')
+        remove_file('docs/authors.md')
 
     if 'no' in '{{ cookiecutter.command_line_interface|lower }}':
         cli_file = os.path.join('{{ cookiecutter.project_slug }}', 'cli.py')
