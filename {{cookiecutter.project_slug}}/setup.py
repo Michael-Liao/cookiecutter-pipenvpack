@@ -3,18 +3,33 @@
 
 from setuptools import setup
 
+{%- if cookiecutter.package_manager == 'pipenv' %}
 from _lib.pipenv.project import Project
 from _lib.pipenv.utils import convert_deps_to_pip
-
-with open('README.rst') as readme_file:
-    readme = readme_file.read()
-
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
 
 pfile = Project().parsed_pipfile
 requirements = convert_deps_to_pip(pfile['packages'], r=False)
 test_requirements = convert_deps_to_pip(pfile['dev-packages'], r=False)
+{%- endif %}
+
+{%- if cookiecutter.package_manager == 'pip' %}
+try: # pip >= 10
+    from pip._internal.req.req_file import parse_requirements
+except ImportError: # for pip <=9.0.3
+    from pip.req.req_file import parse_requirements
+
+reqfile = parse_requirements("requirements.txt", session='')
+testreq = parse_requirements("requirements_dev.txt", session='')
+
+requirements = [str(ir.req) for ir in reqfile]
+test_requirements = [str(ir.req) for ir in testreq]
+{%- endif %}
+
+with open('README.md') as readme_file:
+    readme = readme_file.read()
+
+with open('HISTORY.md') as history_file:
+    history = history_file.read()
 
 {%- set license_classifiers = {
     'MIT license': 'License :: OSI Approved :: MIT License',
