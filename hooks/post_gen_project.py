@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import os
+import shutil
 
 PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
 
+def remove_dir(dirpath):
+    shutil.rmtree(os.path.join(PROJECT_DIRECTORY, dirpath))
 
 def remove_file(filepath):
     os.remove(os.path.join(PROJECT_DIRECTORY, filepath))
@@ -22,3 +25,12 @@ if __name__ == '__main__':
 
     if 'Not open source' == '{{ cookiecutter.open_source_license }}':
         remove_file('LICENSE')
+
+    if '{{cookiecutter.package_manager}}' == 'pipenv':
+        remove_file('requirements.txt')
+        remove_file('requirements_dev.txt')
+
+    if '{{cookiecutter.package_manager}}' == 'pip':
+        remove_file('Pipfile')
+        remove_file('Pipfile.lock')
+        remove_dir('_lib')
